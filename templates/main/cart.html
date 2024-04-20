@@ -1,0 +1,58 @@
+{% extends "main/main.html" %} 
+{% load static %}
+{% block content %}
+
+<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+
+    <div class="text-center text-[24px] font-bold">
+        Корзина
+    </div>
+
+    <div class="max-w-[512px] mx-auto mt-4 bg-[#253449] rounded-xl overflow-hidden">
+        <div class="">
+            <div class="px-4 py-2">
+
+                {% for i in items %}
+                <!-- CART SAMPLE -->
+                <div class="py-4">
+                    <div class="py-1 flex gap-2 justify-center items-center border-b border-[#9da1a3] *:inline-flex">
+                        <span class="mr-auto text-[18px] font-semibold">{{ i.product.name }}</span>
+                        <button class="bg-[#1e2b3c] rounded cart-button" data-action="remove" data-product="{{ i.product.id }}">
+                            <span class="material-symbols-outlined text-[32px]">
+                                remove
+                            </span>
+                        </button>
+                        <button class="bg-[#1e2b3c] rounded cart-button" data-action="add" data-product="{{ i.product.id }}">
+                            <span class="material-symbols-outlined text-[32px]">
+                                add
+                            </span>
+                        </button>
+                    </div>
+                    <div class="flex justify-between text-[16px] font-semibold">
+                        <span class="text-[#9da1a3]">Количество</span>
+                        <span>{{ i.quantity }}</span>
+                    </div>
+                    <div class="flex justify-between text-[16px] font-semibold">
+                        <span class="text-[#9da1a3]">Цена</span>
+                        <span>{{ i.product.price }}</span>
+                    </div>
+                    <div class="flex justify-between text-[16px] font-semibold">
+                        <span class="text-[#9da1a3]">Сумма</span>
+                        <span></span>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+            <div class="px-4 py-2 bg-[#1e2b3c] flex justify-between text-[18px] font-semibold">
+                <span>Всего</span>
+                <span>{{ order.get_cart_total }}₽</span>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'checkout' %}" class="block max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Заказать</a>
+        
+</div>
+
+{% endblock content %}

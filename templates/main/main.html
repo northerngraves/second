@@ -1,20 +1,153 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="md:scroll-smooth">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <title>Document</title>
-</head>
-<body class="bg-gray-950">
-    
-    <main class="w-[960px]">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-        {% block content %}{% endblock content %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <title>Суши-Ок</title>
+
+    <script src="{% static 'js/auth.js' %}" type"text/javascript"></script>
+    
+
+</head>
+<body>
+
+    <main class="min-h-screen flex flex-col">
+        <a name="hero"></a>
+        <header class="hidden md:block sticky top-0 z-30 bg-[#181e2a] overflow-hidden transition-height duration-300">
+            <nav class="max-w-screen-lg mx-auto px-4 h-[48px] flex justify-start items-center">
+                <a href="{% url 'index' %}" class="mr-8">
+                    <span class="material-symbols-outlined text-[40px]">
+                        fastfood
+                    </span>
+                </a>
+                <div class="flex gap-4 items-center text-nowrap">
+                    <a class="hover:text-[#fe6d40]" href="{% url 'index' %}#menu">Меню</a>
+                    <a class="hover:text-[#fe6d40]" href="{% url 'index' %}#hero">Акции</a>
+                    <a class="hover:text-[#fe6d40]" href="{% url 'index' %}#reviews">Отзывы</a>
+                    <a class="hover:text-[#fe6d40]" href="{% url 'index' %}#about">О нас</a>
+                    <a class="hover:text-[#fe6d40]" href="{% url 'index' %}#contact">Контакты</a>
+                </div>
+                <a href="tel:+79999999999" class="ml-auto mr-4 hover:text-[#fe6d40]">+7 (999) 999-99-99</a>
+                <a href="" class="w-[38px] mr-4"><img src="{% static 'img/telegram.png' %}" alt=""></a>
+                <a href="" class="w-[38px]"><img src="{% static 'img/whatsapp.png' %}" alt=""></a>
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'cart' %}" class="relative flex items-center ml-[12px] hover:text-[#fe6d40]">
+                    <span class="material-symbols-outlined text-[40px]">
+                        shopping_cart
+                    </span>
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="relative flex items-center ml-[12px] hover:text-[#fe6d40]">
+                    Войти
+                    <span class="material-symbols-outlined text-[40px]">
+                        Person
+                    </span>
+                </a>
+                {% endif %}
+            </nav>
+        </header>
+        
+        <header id="navbar_drop" class="md:hidden sticky top-0 z-50 bg-[#181e2a] h-[48px] overflow-hidden transition-height duration-300">
+            <nav class="max-w-screen-lg mx-auto px-4 py-2 flex justify-between text-white *:h-[32px] *:w-12 *:flex *:items-center *:justify-center">
+                <button id="" class="mybutton">
+                    <span class="material-symbols-outlined text-[32px]">
+                        menu
+                    </span>
+                </button>
+                <a href="tel:+79999999999">
+                    <span class="material-symbols-outlined text-[32px]">
+                        call
+                    </span>
+                </a>
+
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'cart' %}" class="relative">
+                    <span class="material-symbols-outlined text-[32px]">
+                        shopping_cart
+                    </span>
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="relative">
+                    <span class="material-symbols-outlined text-[32px]">
+                        Person
+                    </span>
+                </a>
+                {% endif %}
+                
+            </nav>
+            <nav class="max-w-screen-lg mx-auto px-8 pt-8 pb-48 h-full flex flex-col items-center gap-4 overflow-hidden">
+                <a href="{% url 'index' %}#menu" class="mybutton">Меню</a>
+                <a href="{% url 'index' %}#hero" class="mybutton">Акции</a>
+                <a href="{% url 'index' %}#reviews" class="mybutton">Отзывы</a>
+                <a href="{% url 'index' %}#about" class="mybutton">О нас</a>
+                <a href="{% url 'index' %}#contact" class="mybutton">Контакты</a>
+                <a href="tel:+79999999999" class="mt-auto">+7 (999) 999-99-99</a>
+                <div class="flex gap-4">
+                    <a href="" class="w-[48px]"><img src="{% static 'img/telegram.png' %}" alt=""></a>
+                    <a href="" class="w-[48px]"><img src="{% static 'img/whatsapp.png' %}" alt=""></a>
+                </div>
+            </nav>
+        </header>
+
+        <article id="authbar" class="hidden sticky top-[48px] z-30">
+            <div class="h-[32px] flex items-center justify-center bg-[#fe6d40] font-semibold">
+                <a href="{% url "login" %}">
+                    Авторизуйтесь для заказа
+                </a>
+            </div>
+        </article>
+        
+        <section class="flex-grow">
+
+            {% block content %}{% endblock content %}
+            
+        </section>
 
     </main>
 
+    <script type="text/javascript">
+        var isUserAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
+
+        if (isUserAuthenticated) {
+            console.log('User is authenticated');
+
+        } else {
+            console.log('User is not authenticated');
+            const authbar = document.getElementById("authbar");
+            var toggle = "close"
+
+            authbar.classList.remove('hidden');
+
+            var buttonlist = document.querySelectorAll('.cart-button');
+            buttonlist.forEach(function(auth) {
+                auth.addEventListener('click', function() {
+                    if (toggle === "close") {
+                        window.location.replace('{% url "login" %}')
+                    }
+                })
+            })
+        }
+
+    </script>
+
+    <script src="{% static 'js/burger.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/cart.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/checkout.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/slider.js' %}" type="text/javascript"></script>
+        
 </body>
 </html>

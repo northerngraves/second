@@ -1,0 +1,31 @@
+{% extends "main/main.html" %}
+
+{% block content %}
+
+<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+
+    <div class="text-center text-[24px] font-bold">
+        Вход
+    </div>
+
+    <form action="" method="POST" class="*:my-4">
+        {% csrf_token %}
+        <div class="max-w-[512px] mx-auto mt-4">
+            <div class="flex flex-col gap-4">
+                <div class="text-[24px] flex rounded-xl overflow-hidden">
+                    <label for="{{ form.phone_number.id_for_label }}" class="px-4 bg-[#253449]">+7</label>
+                    <div class="w-full *:w-full *:text-center *:text-black *:font-semibold">
+                        {{ form.phone_number }}
+                    </div>
+                </div>
+                <div class="w-full rounded-xl overflow-hidden text-[24px] *:w-full *:text-center *:text-black *:font-semibold">
+                    {{ form.code }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" href="" class="block w-full max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Войти</button>
+    </form>
+        
+</div>
+
+{% endblock content %}

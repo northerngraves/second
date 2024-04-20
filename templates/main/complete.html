@@ -1,0 +1,15 @@
+{% extends "main/main.html" %} 
+{% load static %}
+{% block content %}
+
+<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+
+    <div class="text-center text-[24px] font-bold">
+        Ваш заказ принят. Спасибо, что выбираете нас!
+    </div>
+
+    <a href="{% url "index" %}" class="block max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">На главную</a>
+        
+</div>
+
+{% endblock content %}

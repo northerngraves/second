@@ -1,0 +1,69 @@
+{% extends "main/main.html" %}
+
+{% load static %}
+{% block content %}
+
+<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+
+    <div class="text-center text-[24px] font-bold">
+        Оформление заказа
+    </div>
+
+    <form action="" class="*:my-4">
+        <div class="max-w-[512px] mx-auto mt-4 bg-[#253449] rounded-xl overflow-hidden">
+            <div class="">
+                <div class="px-4 py-4 flex flex-col gap-8">
+                    <div class="flex justify-center gap-8">
+                        <div class="relative">
+                            <input type="radio" name="delivery" id="car" class="h-32 w-32" checked value="car"></input>
+                            <label for="car" class="">
+                                <div class="absolute top-0 h-32 w-32 flex flex-col justify-center items-center bg-[#1e2b3c] rounded-xl">
+                                    <span class="font-semibold">Доставка</span>
+                                    <span class="material-symbols-outlined text-[48px]">
+                                        local_shipping
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="radio" name="delivery" id="shop" class="peer/shop h-32 w-32" value="shop"></input>
+                            <label for="shop" class="">
+                                <div class="absolute top-0 h-32 w-32 flex flex-col justify-center items-center bg-[#1e2b3c] rounded-xl peer-checked/shop">
+                                    <span class="font-semibold">Самовывоз</span>
+                                    <span class="material-symbols-outlined text-[48px]">
+                                        local_shipping
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <input id="textInput" type="text" placeholder="Адрес доставки" class="w-full rounded-lg overflow-hidden px-4 py-2 text-black">
+                    <div class="flex flex-col gap-2">
+                        <span class="text-[18px] font-semibold">Способ оплаты</span>
+                        <div class="inline-flex gap-2">
+                            <input type="radio" name="payment" id="online" class="h-5 w-5" value="card">
+                            <label for="online">Картой при получении</label>
+                        </div>
+                        <div class="inline-flex gap-2">
+                            <input type="radio" name="payment" id="cash" class="h-5 w-5" value="cash">
+                            <label for="cash">Наличные</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-2 bg-[#1e2b3c] flex justify-between text-[18px] font-semibold">
+                    <span>Всего</span>
+                    <span>{{ order.get_cart_total }}₽</span>
+                </div>
+            </div>
+        </div>
+        <button type="button" onclick="submitData()" href="" class="block w-full max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Заказать</button>
+    </form>
+        
+</div>
+
+<script type="text/javascript">
+    const completePage = '{% url "complete" %}'
+</script>
+
+{% endblock content %}
