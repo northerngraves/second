@@ -12,6 +12,7 @@
         <div class="">
             <div class="px-4 py-2">
 
+                {% if items %}
                 {% for i in items %}
                 <!-- CART SAMPLE -->
                 <div class="py-4">
@@ -42,6 +43,11 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                <div class="py-4 text-center text-[18px] font-semibold">
+                    Корзина пуста
+                </div>
+                {% endif %}
 
             </div>
             <div class="px-4 py-2 bg-[#1e2b3c] flex justify-between text-[18px] font-semibold">
@@ -51,7 +57,11 @@
         </div>
     </div>
 
+    {% if items %}
     <a href="{% url 'checkout' %}" class="block max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Заказать</a>
+    {% else %}
+    <a href="{% url 'index' %}#menu" class="block max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Меню</a>
+    {% endif %}
         
 </div>
 

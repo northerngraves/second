@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
+from django.db.models import Sum
 from .forms import *
 from .models import *
 import random
@@ -202,10 +203,6 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 
-
-# TODO: Обработка пустой корзины
-# TODO: Сборка всех заказов со статистикой
-
 def updateCheckout(request):
     data = json.loads(request.body)
     orderType = data['orderType']
@@ -236,3 +233,17 @@ def updateCheckout(request):
 def complete(request):
     context = {}
     return render(request, 'main/complete.html', context)
+
+
+def statistics(request):
+    
+    if request.user.is_superuser:
+        # Агрегируем данные, суммируя quantity по каждому product
+        products = OrderItem.objects.select_related('product').values('product__name').annotate(total_quantity=Sum('quantity')).order_by()
+
+        context = {
+            'products':products
+        }
+        return render(request, 'main/stat.html', context)
+
+    return redirect('index')

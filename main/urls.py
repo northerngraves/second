@@ -11,4 +11,5 @@ urlpatterns = [
 
     path('update_item/', views.updateItem, name='update_item'),
     path('update_checkout/', views.updateCheckout, name='update_checkout'),
+    path('secretkey/stat/', views.statistics, name='statistics'),
 ]
