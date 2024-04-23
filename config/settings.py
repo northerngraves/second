@@ -120,9 +120,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
 
@@ -134,3 +132,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
+
+# Django installed.
+# For deploy Your application You need:
+
+# Remove all files from /var/www/django/project and put Your application there
+# In config files (/etc/nginx/conf.d/django.conf , /etc/uwsgi.d/django.ini , /etc/uwsgi/app-enabled/django.ini (depends on OS)) replace mysite to Your application's name (dir name)
+# Restart nginx and uwsgi: service nginx restart ; service uwsgi restart
