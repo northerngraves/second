@@ -15,7 +15,7 @@
                 <div class="px-4 py-4 flex flex-col gap-8">
                     <div class="flex justify-center gap-8">
                         <div class="relative">
-                            <input type="radio" name="delivery" id="car" class="h-32 w-32" checked value="car"></input>
+                            <input type="radio" name="delivery" id="car" class="h-32 w-32" checked value="car" required></input>
                             <label for="car" class="">
                                 <div class="absolute top-0 h-32 w-32 flex flex-col justify-center items-center bg-[#1e2b3c] rounded-xl">
                                     <span class="font-semibold">Доставка</span>
@@ -26,7 +26,7 @@
                             </label>
                         </div>
                         <div class="relative">
-                            <input type="radio" name="delivery" id="shop" class="peer/shop h-32 w-32" value="shop"></input>
+                            <input type="radio" name="delivery" id="shop" class="peer/shop h-32 w-32" value="shop" required></input>
                             <label for="shop" class="">
                                 <div class="absolute top-0 h-32 w-32 flex flex-col justify-center items-center bg-[#1e2b3c] rounded-xl peer-checked/shop">
                                     <span class="font-semibold">Самовывоз</span>
@@ -38,15 +38,15 @@
                         </div>
                     </div>
 
-                    <input id="textInput" type="text" placeholder="Адрес доставки" class="w-full rounded-lg overflow-hidden px-4 py-2 text-black">
+                    <input id="textInput" type="text" placeholder="Адрес доставки" class="w-full rounded-lg overflow-hidden px-4 py-2 text-black" required>
                     <div class="flex flex-col gap-2">
                         <span class="text-[18px] font-semibold">Способ оплаты</span>
                         <div class="inline-flex gap-2">
-                            <input type="radio" name="payment" id="online" class="h-5 w-5" value="card">
-                            <label for="online">Картой при получении</label>
+                            <input type="radio" name="payment" id="online" class="h-5 w-5" value="card" checked required>
+                            <label for="online">Перевод на карту</label>
                         </div>
                         <div class="inline-flex gap-2">
-                            <input type="radio" name="payment" id="cash" class="h-5 w-5" value="cash">
+                            <input type="radio" name="payment" id="cash" class="h-5 w-5" value="cash" required>
                             <label for="cash">Наличные</label>
                         </div>
                     </div>

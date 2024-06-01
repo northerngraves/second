@@ -24,6 +24,13 @@
             </div>
         </div>
         <button type="submit" href="" class="block w-full max-w-[512px] py-2 mx-auto mt-4 mb-16 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold">Войти</button>
+
+        {% for m in messages %}
+            <div class="text-center text-red-500 font-semibold">
+                {{ m }}
+            </div>
+        {% endfor %}
+
     </form>
         
 </div>

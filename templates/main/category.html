@@ -1,0 +1,60 @@
+{% extends "main/main.html" %}
+
+{% load static %}
+{% block content %}
+
+<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+    <a id="new"></a>
+    <div class="mt-16">
+        <div class="flex gap-2 items-center *:text-[36px] *:md:text-[48px] *:leading-[36px]">
+            <span class="material-symbols-outlined"> fastfood </span>
+            <h1 class="promo uppercase">{{ category.name }}</h1>
+            <div class="w-full border-b border-2"></div>
+        </div>
+
+        <div class="mt-4 flex flex-col md:grid md:grid-cols-2 gap-4 *:h-40">
+
+            {% for p in products %}
+            <!-- NEW SAMPLE -->
+            <div class="flex rounded-xl overflow-hidden">
+                {% if p.image %}
+                <img class="w-1/2 object-center object-cover" src="{{ p.image.url }}"></img>
+                {% else %}
+                <img class="w-1/2 object-center object-cover" src="{% static "img/placeholder.png" %}"></img>
+                {% endif %}
+                <div class="w-1/2 px-4 py-2 flex flex-col justify-start bg-[#1f2734] font-semibold">
+                    <h2 class="md:text-[20px]">{{ p.name }}</h2>
+                    <p class="text-[12px] text-[#bcbebf]">{{ p.desc }}</p>
+                    <div class="mt-auto flex justify-between items-center">
+                        <div class="text-[#72b46d]">{{ p.price }} руб.</div>
+                        <div class="">
+
+                            {% if request.user.is_authenticated %}
+                            <button class="px-4 py-1 flex items-center bg-[#fe6d40] hover:bg-[#c85734] rounded-lg cart-button add-to-cart-btn" data-action="add" data-product="{{ p.id }}">
+                                <span class="material-symbols-outlined text-[20px]">
+                                    add
+                                </span>
+                                <span class="material-symbols-outlined text-[20px]">
+                                    shopping_cart
+                                </span>
+                            </button>
+                            {% else %}
+                            <button class="px-4 py-1 flex items-center bg-[#fe6d40] hover:bg-[#c85734] rounded-lg cart-button">
+                                <span class="material-symbols-outlined text-[20px]">
+                                    add
+                                </span>
+                                <span class="material-symbols-outlined text-[20px]">
+                                    shopping_cart
+                                </span>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
+from django.utils.timezone import make_naive
 from .forms import *
 from .models import *
+from datetime import datetime, timedelta
 import random
 import re
 import requests
@@ -37,24 +39,42 @@ def send_sms(phone_number, message):
     """
 
     # URL сервиса для отправки SMS
-    url = "https://sms.ru/sms/send"
+    url = "https://direct.i-dgtl.ru/api/v1/message"
 
-    # Параметры запроса
-    params = {
-        "api_id": "6AAAF2AF-DE8B-228F-B0E2-828C679A2867",
-        "to": phone_number,
-        "msg": message,
-        "json": 1
+    #Заголовки запроса
+    headers = {
+        'Authorization': 'Basic NzkyOTpzeFlTUGd2c0VMOTZtME8xdndLVkVv',
+        # 'Authorization': 'Basic NzkyNzpySFpCNmNsWW5hakxFSnczVFk0S3I4',
+        'Content-Type': 'application/json'
     }
 
-    # response = requests.post(url, params=params)
-    print(f'Nubmer: +7 {phone_number}')
+    # Параметры запроса
+    data = [
+        {
+            "channelType": "SMS",
+            "senderName": "sms_promo",
+            "destination": f'7{phone_number}',
+            "content": message
+        }
+    ]
+
+    # Отправка запроса
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+
+# Обработка ответа
+    if response.status_code == 200:
+        print("Сообщение успешно отправлено")
+        print(response.text)
+    else:
+        print(f"Ошибка при отправке сообщения: {response.status_code}")
+        print(response.text)
+
+    print(f'Nubmer: +7{phone_number}')
     print(f'Code: {message}')
     return
 
 
 def login_request(request):
-
     if request.user.is_authenticated:
         return redirect('index')
 
@@ -71,13 +91,33 @@ def login_request(request):
                 verification = PhoneVerification(user=user, phone_number=phone_number, verified=False)
                 verification.verification_code = str(generate_code())
                 verification.save()
-                send_sms(phone_number, f'Your verification code is {verification.verification_code}')
+
+                # Проверка времени последнего запроса
+                if verification.last_request_time:
+                    last_request_naive = make_naive(verification.last_request_time)
+                    if datetime.now() - last_request_naive < timedelta(minutes=2):
+                        messages.error(request, "Вы можете запрашивать SMS не чаще одного раза в 2 минуты.")
+                        return render(request, 'main/login.html', {'form': form})
+
+                verification.last_request_time = datetime.now()
+                verification.save()
+
+                send_sms(phone_number, f'Код авторизации Суши-Ок {verification.verification_code}')
                 return render(request, 'main/code.html', {'form': form, 'phone_number': phone_number})
 
             if not code:
+                # Проверка времени последнего запроса
+                if verification.last_request_time:
+                    last_request_naive = make_naive(verification.last_request_time)
+                    if datetime.now() - last_request_naive < timedelta(minutes=2):
+                        messages.error(request, "Вы можете запрашивать SMS не чаще одного раза в 2 минуты.")
+                        return render(request, 'main/code.html', {'form': form, 'phone_number': phone_number})
+
                 verification.verification_code = str(generate_code())
+                verification.last_request_time = datetime.now()
                 verification.save()
-                send_sms(phone_number, f'Your verification code is {verification.verification_code}')
+
+                send_sms(phone_number, f'Код авторизации Суши-Ок {verification.verification_code}')
                 return render(request, 'main/code.html', {'form': form, 'phone_number': phone_number})
 
             if code and verification.verification_code == code:
@@ -105,11 +145,24 @@ def logout_request(request):
 def index(request):
     categories = Category.objects.all()
     products = Product.objects.all()
+    new = Product.objects.filter(new=1)
     context = {
         'products':products,
         'categories':categories,
+        'new':new,
     }
     return render(request, 'main/index.html', context)
+
+def category_detail(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+
+    context = {
+        'category': category,
+        'products': products
+    }
+
+    return render(request, 'main/category.html', context)
 
 @login_required
 def checkout(request):
@@ -210,6 +263,8 @@ def updateCheckout(request):
     address = data['address']
     user = request.user
     order = Order.objects.get(user=user, sended=False)
+    items = order.orderitem_set.all()
+    totalItems = order.get_cart_total
 
     shipping, created = ShippingAddress.objects.get_or_create(order=order)
     shipping.address = address
@@ -220,12 +275,53 @@ def updateCheckout(request):
     order.sended = True
     order.save()
 
+    orderTypeStr = ''
+    if orderType == 'car':
+        orderTypeStr = 'Доставка'
+    else:
+        orderTypeStr = 'Самовывоз'
+
+    paymentTypeStr = ''
+    if paymentType == 'cash':
+        paymentTypeStr = 'Наличные'
+    else:
+        paymentTypeStr = 'Карта'
+
+    text = f'Заказ #{order.order_id}\n\nТип: {orderTypeStr} | Оплата: {paymentTypeStr}\n\nАдрес: {address}\n\nТелефон: +7{user.username}\n\nСостав заказа:\n'
+
     items = OrderItem.objects.filter(order=order)
     for i in items:
         print(i.product, i.quantity)
+        text += f"{i.quantity} - {i.product}\n"
+    
+    text += f"\n\nСумма заказа - {totalItems}"
 
-    msg = f'Адрес: {address} | Тип: {orderType} | Оплата: {paymentType}'
-    print(msg)
+    print(text)
+
+    # URL API
+    url = "https://api.puzzlebot.top/"
+
+    # Параметры запроса
+    params = {
+        'token': '0O61PQUHwCHgK2INgiBjuH7AphSk6PLB',
+        'method': 'postSend'
+    }
+
+    data = {
+        "chats_ids": "private",
+        "text": text,
+        "type": "message"
+    }
+
+    # Отправка POST-запроса
+    response = requests.post(url, params=params, json=data)
+
+    # Проверка ответа
+    if response.status_code == 200:
+        print("Запрос успешно выполнен!")
+        print("Ответ сервера:", response.json())
+    else:
+        print("Ошибка в запросе:", response.status_code)
 
     return JsonResponse('Order was added', safe=False)
 

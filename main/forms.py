@@ -18,37 +18,39 @@ class UserLoginForm(forms.Form):
 
 
 class CheckoutForm(forms.Form):
-
     CHOICES_DELIVERY = [
         ('delivery', 'Доставка'),
         ('shop', 'Самовывоз'),
     ]
 
     CHOICES_PAYMENT = [
-        ('delivery', 'Доставка'),
-        ('shop', 'Самовывоз'),
+        ('card', 'Картой при получении'),
+        ('cash', 'Наличные'),
     ]
 
     address = forms.CharField(
         label="Введите адрес",
         widget=forms.Textarea(attrs={
-            'placeholder':'Адрес доставки', 
-            'class':'w-full rounded-lg overflow-hidden px-4 py-2'
-        })
+            'placeholder': 'Адрес доставки',
+            'class': 'w-full rounded-lg overflow-hidden px-4 py-2'
+        }),
+        required=True  # Поле обязательно для заполнения
     )
     orderType = forms.ChoiceField(
         choices=CHOICES_DELIVERY,
         label="Выберите способ получения заказа",
         widget=forms.RadioSelect(attrs={
-            'name':'delivery',
-            'class':'flex h-5 w-5'
-        })
+            'name': 'delivery',
+            'class': 'flex h-5 w-5'
+        }),
+        required=True  # Поле обязательно для заполнения
     )
     paymentType = forms.ChoiceField(
         choices=CHOICES_PAYMENT,
         label="Выберите способ оплаты",
         widget=forms.RadioSelect(attrs={
-            'name':'delivery',
-            'class':'flex h-5 w-5'
-        })
+            'name': 'payment',
+            'class': 'flex h-5 w-5'
+        }),
+        required=True  # Поле обязательно для заполнения
     )

@@ -26,8 +26,12 @@ SECRET_KEY = 'django-insecure-6p0#2$wm9%q(84qj(nv#mo50hz@u4876gv@8@hz5*ck@0o&4v5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] #'sushiok-spb.ru', 'www.sushiok-spb.ru'
+ALLOWED_HOSTS = ['sushiok-spb.ru', 'www.sushiok-spb.ru', '127.0.0.1'] #'sushiok-spb.ru', 'www.sushiok-spb.ru'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://sushiok-spb.ru',
+    'https://www.sushiok-spb.ru',
+]
 
 # Application definition
 
@@ -136,6 +140,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
+
+# Время жизни сессии в секундах (например, 2 недели)
+SESSION_COOKIE_AGE = 604800  # 1 неделя
+
+# Убедитесь, что включена настройка для сохранения сессий, если они не изменились
+SESSION_SAVE_EVERY_REQUEST = False
 
 # Django installed.
 # For deploy Your application You need:

@@ -3,12 +3,15 @@
 
 {% block content %}
 
-<div id="wrapper" class="mt-4 px-4 mx-auto max-w-screen-lg">
+<div class="mt-4 px-4 mx-auto max-w-screen-lg">
     <!-- ----------- -->
     <!-- HERO SLIDER -->
     <!-- ----------- -->
     <div class="">
-        <div class="slider rounded-xl overflow-hidden relative">
+        <div class="rounded-xl overflow-hidden">
+            <img src="{% static 'img/1.png' %}" alt="">
+        </div>
+        {% comment %} <div class="slider rounded-xl overflow-hidden relative">
             <div class="slides relative top-0 left-0 pt-[100%] md:pt-0 md:h-[360px] w-full flex transition duration-150 ease-in-out">
                 <img src="{% static 'img/1.png' %}" class="slide-image absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" style="opacity: 1" />
                 <img src="{% static 'img/2.png' %}" class="slide-image absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" />
@@ -25,12 +28,12 @@
             <div class="indicator bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
             <div class="indicator bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
             <div class="indicator bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
-        </div>
+        </div> {% endcomment %}
 
-        <div class="mt-3 flex flex-wrap justify-between *:relative *:w-[49%] *:pt-[25%] *:rounded-xl *:overflow-hidden">
+        {% comment %} <div class="mt-3 flex flex-wrap justify-between *:relative *:w-[49%] *:pt-[25%] *:rounded-xl *:overflow-hidden">
             <div class="bg-cover" style="background-image: url('{% static 'img/4.png' %}')"></div>
             <div class="bg-cover" style="background-image: url('{% static 'img/3.png' %}')"></div>
-        </div>
+        </div> {% endcomment %}
     </div>
 
     <!-- --------- -->
@@ -49,16 +52,16 @@
             {% for c in categories %}
             <!-- CATEGORY SAMPLE -->
             {% if c.image %}
-            <div class="relative w-full pt-[100%] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('{{ c.image.url }}')">
+            <a href="{% url 'category_detail' c.slug %}"class="relative w-full pt-[100%] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('{{ c.image.url }}')">
             {% else %}
-            <div class="relative w-full pt-[100%] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('{% static "img/placeholder.png" %}')">
+            <a href="{% url 'category_detail' c.slug %}"class="relative w-full pt-[100%] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('{% static "img/placeholder.png" %}')">
             {% endif %}
                 <div class="promo absolute top-0 z-10 w-full text-center text-[32px] md:text-[48px]">{{ c.name }}</div>
                 <div class="absolute top-0 w-full h-full bg-gradient-to-b from-black/90 via-transparent to-transparent hover:bg-white/10 transition-background duration-100"></div>
-            </div>
+            </a>
             {% endfor %}
 
-        </div>
+        </a>
     </div>
 
     <!-- --------- -->
@@ -74,23 +77,23 @@
 
         <div class="mt-4 flex flex-col md:grid md:grid-cols-2 gap-4 *:h-40">
 
-            {% for p in products %}
+            {% for n in new %}
             <!-- NEW SAMPLE -->
             <div class="flex rounded-xl overflow-hidden">
-                {% if p.image %}
-                <img class="w-1/2 object-center object-cover" src="{{ p.image.url }}"></img>
+                {% if n.image %}
+                <img class="w-1/2 object-center object-cover" src="{{ n.image.url }}"></img>
                 {% else %}
-                <img class="w-1/2 object-center object-cover" src="{% static "media/placeholder.png" %}"></img>
+                <img class="w-1/2 object-center object-cover" src="{% static "img/placeholder.png" %}"></img>
                 {% endif %}
                 <div class="w-1/2 px-4 py-2 flex flex-col justify-start bg-[#1f2734] font-semibold">
-                    <h2 class="md:text-[20px]">{{ p.name }}</h2>
-                    <p class="text-[14px] md:text-[16px] text-[#bcbebf]">{{ p.desc }}</p>
+                    <h2 class="md:text-[20px]">{{ n.name }}</h2>
+                    <p class="text-[12px] text-[#bcbebf]">{{ n.desc }}</p>
                     <div class="mt-auto flex justify-between items-center">
-                        <div class="text-[#72b46d]">{{ p.price }} руб.</div>
+                        <div class="text-[#72b46d]">{{ n.price }} руб.</div>
                         <div class="">
 
                             {% if request.user.is_authenticated %}
-                            <button class="px-4 py-1 flex items-center bg-[#fe6d40] hover:bg-[#c85734] rounded-lg cart-button" data-action="add" data-product="{{ p.id }}">
+                            <button class="px-4 py-1 flex items-center bg-[#fe6d40] hover:bg-[#c85734] rounded-lg cart-button add-to-cart-btn" data-action="add" data-product="{{ n.id }}">
                                 <span class="material-symbols-outlined text-[20px]">
                                     add
                                 </span>
@@ -116,7 +119,7 @@
 
         </div>
 
-        <a href="" class="block w-1/3 py-2 mx-auto mt-4 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold stat">Все новинки</a>
+        {% comment %} <a href="" class="block w-1/3 py-2 mx-auto mt-4 bg-[#fe6d40] hover:bg-[#c85734] rounded-xl text-center font-bold stat">Все новинки</a> {% endcomment %}
     </div>
 
     <!-- ------------ -->
@@ -184,7 +187,7 @@
             <!-- ABOUT SAMPLE -->
             <div class="px-6 py-4 flex flex-col bg-[#1f2734] rounded-xl overflow-hidden">
                 <h2 class="text-[32px] font-bold">ОПЛАТА</h2>
-                <p class="text-[#bcbebf]">Бесплатная доставка по Ленинградской области от 1500 рублей</p>
+                <p class="text-[#bcbebf]">Принимаем наличный и безналичный расчет</p>
             </div>
         </div>
 
@@ -198,30 +201,16 @@
             ></iframe>
         </div> {% endcomment %}
 
-        <div class="mt-8">
-            <div class="text-center text-[32px] font-bold">Суши-Ок</div>
-            <div class="mt-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni dicta autem laudantium illum. Voluptatum dolorem saepe totam eaque minus? Labore ad perferendis, ex assumenda harum eligendi consequatur quam placeat
-                repellendus! Quod praesentium odit debitis et perspiciatis dolor voluptates voluptate labore saepe adipisci veniam necessitatibus fugiat laudantium libero, nesciunt nemo qui magni autem eligendi architecto velit? Ullam
-                corrupti harum nesciunt id? Aliquid eum fuga dolor? Consequatur ad qui sequi alias, itaque enim assumenda. Repellendus sequi, iste eligendi facere eum harum repudiandae expedita consequatur itaque fuga error, pariatur quo
-                ducimus maiores similique.
-            </div>
-        </div>
-
         <div class="slider-2 mt-8 rounded-xl overflow-hidden relative">
             <div class="slides-2 relative top-0 left-0 pt-[100%] md:pt-0 md:h-[360px] w-full flex transition duration-150 ease-in-out">
                 <img src="{% static 'img/6.png' %}" class="slide-image-2 absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" style="opacity: 1" />
                 <img src="{% static 'img/7.png' %}" class="slide-image-2 absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" />
                 <img src="{% static 'img/8.png' %}" class="slide-image-2 absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" />
-                <img src="{% static 'img/9.png' %}" class="slide-image-2 absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" />
-                <img src="{% static 'img/10.png' %}" class="slide-image-2 absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" />
             </div>
             <button class="btn prev-2 absolute top-1/2 left-0 h-full w-[20%] -translate-y-1/2 z-10 text-white text-[24px] hover:bg-black/30 transition-background duration-200 ease-in-out">❮</button>
             <button class="btn next-2 absolute top-1/2 right-0 h-full w-[20%] -translate-y-1/2 z-10 text-white text-[24px] hover:bg-black/30 transition-background duration-200 ease-in-out">❯</button>
         </div>
         <div class="slider-indicators-2 mt-3 flex justify-center space-x-2 mt-2">
-            <div class="indicator-2 bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
-            <div class="indicator-2 bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
             <div class="indicator-2 bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
             <div class="indicator-2 bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
             <div class="indicator-2 bg-white opacity-50 w-4 h-4 rounded-full cursor-pointer"></div>
@@ -249,30 +238,17 @@
             ></iframe>
         </div>
 
-        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 *:w-full *:p-4 *:bg-[#1f2734] *:rounded-xl">
+        <div class="mt-4 grid grid-cols-1 gap-4 *:w-full *:p-4 *:bg-[#1f2734] *:rounded-xl">
             <div class="">
                 <h1 class="font-bold">Адрес:</h1>
                 <p class="text-[#bcbebf]">Ленинградская область, Всеволожский район, Лесколовское сельское поселение, деревня Лесколово</p>
             </div>
-            <div class="w-[47%]">
-                <h1 class="font-bold">Реквизиты:</h1>
-                <p class="text-[#bcbebf]">ООО «Суши-Ок» ИНН 99999999 ОГРН 9999999999999</p>
-            </div>
         </div>
     </div>
 </div>
+</div>
 
-<article class="mt-32 bg-[#161b26]">
-    <div id="wrapper" class="px-4 py-12 mx-auto max-w-screen-lg">
-        <div class="flex flex-col items-center">
-            <span class="material-symbols-outlined text-[48px]"> fastfood </span>
-            <a href="tel:+79999999999" class="py-2 text-[24px] font-bold">+7 (999) 999-99-99</a>
-            <p>Прием заказов ежедневно</p>
-            <p>Пн-Пт с 10:00 до 23:00</p>
-            <p>Сб-Вс с 10:00 до 00:00</p>
-        </div>
-    </div>
-</article>
+    
 
 
 {% endblock content %}
